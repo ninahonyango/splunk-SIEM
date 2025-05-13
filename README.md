@@ -2,6 +2,8 @@
 
 ## 🧾 Project Overview
 
+This project focuses on real-time detection and visualization of brute force attacks and network reconnaissance (Nmap scans) by ingesting and analyzing syslog data using Splunk. The objective is to simulate a Security Operations Center (SOC) scenario where security analysts detect and respond to threats using centralized log monitoring and detection logic.
+
 ---
 
 ## 🛠️ Tools & Technologies Used
