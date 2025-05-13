@@ -635,7 +635,7 @@ nmap -sV 192.168.56.101
 I also did a brute-force attack on Metasploitable2's FTP server with Kali as the attacker machine as shown below:
 
 ![Kali Brute-Force Attack On Metasploitable2's FTP Server Screenshot](images/bruteforce.png)
-![Kali Brute-Force Attack On Metasploitable2;s FTP Server Screenshot[(images/bruteforce2.png)
+![Kali Brute-Force Attack On Metasploitable2;s FTP Server Screenshot](images/bruteforce2.png)
 *Screenshots of brute-force attacks on Metasploitable2's FTP Server with Kali as the attacker machine*
 
 The above screenshots show brute-force attempts which discovered 9 valid username-password combinations. I then tried logging into the FTP server using a fake username and password as illustrated below:
