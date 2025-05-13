@@ -678,7 +678,7 @@ index=* host="192.168.56.1" "metasploitlog"
 ```
 
 ![Verifying Metasploitable2 Logs From Kali In Splunk Screenshot](images/verifyLogsInSplunk.png)
-![Verifying Metasploitable2 Logs From Kali In Splunk Screenshot](images/verifyLogsInSplunk2.png)
+![Verifying Metasploitable2 Logs From Kali In Splunk Screenshot](images/verifyLogsInSplunk3.png)
 *Screenshot on checking Metasploitable2 logs from Kali In Splunk*
 
 From the screenshot above, I confirmed that the Metasploitable2 logs were reaching Splunk. The forwarded logs like:
