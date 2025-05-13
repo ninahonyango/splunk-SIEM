@@ -2,6 +2,8 @@
 
 ## 🧾 Project Overview
 
+---
+
 ## 🛠️ Tools & Technologies Used
 
 - **Kali Linux** (Attacker VM): For generating simulated malicious traffic and logs.
@@ -14,6 +16,7 @@
 
 - **Bash Scripting** : used to create scripts that read specific log files and forward entries to Splunk.
 
+---
 
 ## 🎯 Objectives
 
@@ -63,7 +66,6 @@
 | Attacker IP     | `192.168.56.1`                                                                       |
 | Target IP       | `192.168.56.101`                                                                     | 
 
-#### Lab Architecture Overview
 
 ---
 
@@ -154,7 +156,7 @@ After reconfiguring the adapter to host-only, restart Kali Linux and start Metas
 ipconfig
 ```
 
-The Windows host IP address was identified as `192.168.56.103`. Using this information, I configured both Kali Linux and Metasploitable2 VMs to operate on the same subnet as the Windows host, ensuring seamless communication within the host-only network.
+The Windows host Ethernet adapter IP address was identified as `192.168.56.103`. Using this information, I configured both Kali Linux and Metasploitable2 VMs to operate on the same subnet as the Windows host, ensuring seamless communication within the host-only network.
 
 ---
 
@@ -195,10 +197,10 @@ To confirm the assigned IP address, run:
 ip a
 ```
 
-You should see the eth0 interface listed with IP address 192.168.56.1 as shown below:
-
 ![Kali static IP Screenshot](images/kaliIP.png)
 *Screenshot on verifying Kali's IP address*
+
+The screenshot above verifies eth0 interface listed with IP address 192.168.56.1
 
 To verify the current routing table and Kali's network interface, execute:
 
@@ -212,16 +214,16 @@ The route to the 192.168.56.0/24 network was not present, it had not automatical
 sudo ip route add 192.168.56.0/24 dev eth0
 ```
 
-To confirm the route has been successfully added, I executed:
+To confirm the route has been successfully added, execute:
 
 ```
 ip route
 ```
 
-You should now see a line indicating that traffic to the 192.168.56.0/24 network will be routed through eth0 as shown below:
-
 ![Screenshot on verify the current routing table](images/ipRoute.png)
 *Screenshot on verifying the current routing table and confirming Kali's network interface*
+
+The screenshot above shows a line indicating that traffic to the 192.168.56.0/24 network will be routed through eth0, hence confirming routing and Kali's interface.
 
 Because the setup uses host only adapter, the three machines: Kali VM, Metasploitable2 VM, and Windows host are all operating in the same subnet. Checking and adding the eth0 interface is important because it adds a route to Kali's routing table, specifically telling the system if you're trying to reach the 192.168.56.0/24 network, send that traffic through interface eth0.
 
@@ -260,8 +262,8 @@ To confirm the assigned Metasploitable2 IP address, run:
 ```
 ip a
 ```
-
-You should see the eth0 interface listed with IP address 192.168.56.101. 
+ 
+The output verified eth0 interface listed with IP address 192.168.56.101
 
 ---
 
@@ -336,16 +338,18 @@ For the Port, enter 514 which is common for syslog
 
 Set "Source type" to syslog 
 
-I Left the rest as default and clicked on "Submit".
+I left the rest as default and clicked on "Submit".
 
 ![Creating A New UDP Data Input In Splunk Screenshot](images/newSplunkDataInput.png)
 *Screenshot on creating a new UDP data input in Splunk*
 
 In the next step, Kali Linux and Metasploitable2 VMs were configured to send logs to Splunk.
 
+---
+
 #### 🔹 3.2 Configure Kali Linux And Metasploitable2 VMs to Send Logs to Splunk
 
-1. Configuring Kali Linux VM To Send Logs To Splunk
+#### A. Configuring Kali Linux VM To Send Logs To Splunk
 
 Kali Linux uses rsyslog to handle logs, so rsyslog was configured to forward logs to Splunk.
 
@@ -385,9 +389,13 @@ I then proceeded to Splunk's Search & Reporting dashboard, and ran a search with
 ![Splunk Logger Test Screenshot](images/splunkTestKali.png)
 *Screenshot on verifying if Kali logs are being sent to Splunk*
 
-2. Configuring Metasploitable2 VM To Send Logs To Splunk
+The screenshot above verified that Splunk was receiving logs from Kali VM.
 
-Metasploitable2 uses syslogd (the traditional syslog daemon) to handle logs, not rsyslog. 
+---
+
+#### B. Configuring Metasploitable2 VM To Send Logs To Splunk
+
+Metasploitable2 uses syslogd (the traditional syslog daemon) to handle logs, not rsyslog as in Kali. 
 
 To configure Metasploitable2 to send logs to Splunk, I opened the syslog configuration file on Metasploitable2:
 
@@ -403,13 +411,13 @@ The reason I did not use :514 in *.* @192.168.56.103 for traditional syslogd (us
 
 After saving the configuration, syslogd was restarted to apply the changes.
 
-Since systemctl or service doesn't work in Metasploitable2, to restart syslogd, execute: 
+Since systemctl or service doesn't work in Metasploitable2, to restart syslogd, the following command was executed: 
 
 ```
 sudo killall -HUP syslogd
 ```
 
-Now that Metasploitable2 has been configured to send logs to Splunk, I verified that the logs are successfully being sent by creating a test logger and searching for the log in Splunk by running a test log in Metasploitable2 terminal:
+Now that Metasploitable2 has been configured to send logs to Splunk, I verified that the logs are successfully being sent to Splunk by creating a test logger and searching for the log in Splunk by running a test log in Metasploitable2 terminal:
 
 ```
 logger 'test message from Metasploitable2'
@@ -420,11 +428,15 @@ I then proceeded to Splunk's Search & Reporting dashboard, and ran a search with
 ![Splunk Logger Test Screenshot](images/splunkTestMetasploit.png)
 *Screenshot on verifying if Metasploitable2 logs are being sent to Splunk*
 
+The screenshot above verified that Splunk was receiving logs from Metasploitable2 VM.
+
+---
+
 ### Step 4: 🛠 Configure Log Forwarding for Specific Files on Both Kali and Metasploitable2 VMs
 
 #### 🔹 4A. Kali Linux Log Forwarding (Attacker Machine)
 
-To enable Kali Linux to monitor specific log files, such as /var/log/auth.log, and forward new entries to a Splunk server in real time, I created a custom rsyslog configuration file by running:
+To enable Kali Linux to monitor specific log files, such as /var/log/auth.log, and forward new entries to the Splunk server in real time, a custom rsyslog configuration file was created by running:
 
 ```
 sudo nano /etc/rsyslog.d/60-authlog.conf
@@ -433,6 +445,8 @@ sudo nano /etc/rsyslog.d/60-authlog.conf
 I then added the following in the file:
 
 ```
+module(load="imfile")
+
 input(type="imfile"
       File="/var/log/auth.log"
       Tag="kali-auth"
@@ -498,13 +512,15 @@ input(type="imudp" port="514")  # Listens for syslog messages on UDP 514
 ![Screenshot On Enabling Kali's rsyslog To Receive Logs From Metasploitable2](images/kaliReceiveMetasploitLogs.png)
 *Screenshot on enabling Kali's rsyslog to receive logs from Metasploitable2*
 
-I restarted rsyslog service to apply the changes:
+Saved, exited and restarted rsyslog service to apply the changes:
 
 ```
 sudo systemctl restart rsyslog
 ```
 
 I then proceeded to enable remote logging on Metasploitable2 so as to send log messages to Kali.
+
+---
 
 #### 🧩 Enable remote logging on Metasploitable2
 
@@ -528,11 +544,13 @@ I then saved, exited the file, and restarted syslog to apply the changes:
 sudo killall -HUP syslogd
 ```
 
+---
+
 #### 🔹 4C. Forward Logs from Metasploitable2 to Kali Linux
 
 Kali Linux had already been configured to receive logs over UDP in step 4B above.
 
-I proceeded to create a dedicated log file for Metasploitable2 logs in Kali Linux:
+I proceeded to create a dedicated log file for Metasploitable2 logs in Kali Linux by running:
 
 ```
 sudo nano /etc/rsyslog.d/metasploitable.conf
@@ -556,11 +574,13 @@ I then saved the file, exited and restarted rsyslog to apply the changes:
 sudo systemctl restart rsyslog
 ```
 
+---
+
 #### 🔹 4D. Forward /var/log/vsftpd.log from Metasploitable2 to Kali using syslogd + logger
 
-One of this project's objective is to detect and investigate malicious activities such as nmap scans on Metasploitable2 and other exploit activities on the FTP server running on Metasploitable2. 
+One of this project's main objectives is to detect and investigate malicious activities such as nmap scans on Metasploitable2 and other exploit activities on the FTP server running on Metasploitable2. 
 
-The file vsftpd.log holds logs generated by the vsftpd service running on Metasploitable2. It contains logs such as connection attempts, authentication attempts, commands issued by the client, errors and warnings such as improper commands or syntax among others. It is specifically used to record FTP server activity, and is particularly relevant when testing or exploiting vulnerabilities like the famous vsftpd 2.3.4 backdoor or brute-force attempts on the FTP server. Because I wanted to monitor these exploit activities, vsftpd.log had to be configured to reach Splunk so as to give visibility into all FTP-related activities.
+The file vsftpd.log holds logs generated by the vsftpd service running on Metasploitable2. It contains logs such as connection attempts, authentication failures, commands issued by the client, errors and warnings such as improper commands or syntax among others. It is specifically used to record FTP server activity, and is particularly relevant when testing or exploiting vulnerabilities like the famous vsftpd 2.3.4 backdoor or brute-force attempts on the FTP server. Because I wanted to monitor these exploit activities, vsftpd.log had to be configured to reach Splunk so as to give visibility into all FTP-related activities.
 
 vsftpd.log is not handled by syslog, which means it will not be forwarded unless we explicitly tell Metasploitable2's syslog daemon to watch that file. I then proceeded to configure logs from vsftpd.log to be forwarded live to Kali so as to get logs on activities on the vulnerable FTP service, which will then be forwarded from Kali to Splunk.
 
@@ -596,6 +616,8 @@ To run it in the background or at boot without hanging up if the terminal sessio
 nohup /usr/local/bin/forward_vsftpd.sh &
 ```
 
+---
+
 ### Step 5: 🔹 From Kali Trigger Activity On Metasploitable2
 
 To test the configuration in step 4D above and to generate logs, I triggered activities on Metasploitable2 from Kali. 
@@ -608,16 +630,20 @@ nmap -sV 192.168.56.101
 
 ![Kali Nmap Scan Trigger Activity Screenshot](images/nmapScan.png)
 ![Kali Nmap Scan Trigger Activity Screenshot](images/nmapScan1.png)
-*Screenshots showing a detailed Metasploitable2 scan with vservice and version detection from Kali*
+*Screenshots showing a detailed Metasploitable2 scan with service and version detection from Kali*
 
-I also did a brute-force FTP, which should log activity in Kali's /var/log/metasploitable.log as shown below:
+I also did a brute-force attack on Metasploitable2's FTP server with Kali as the attacker machine as shown below:
 
-![Splunk Logger Test Screenshot](images/KaliAuthLogs.png)########################################3
-*Screenshot on verifying if Kali auth-logs are being sent to Splunk*
+![Kali Brute-Force Attack On Metasploitable2's FTP Server Screenshot](images/bruteforce.png)
+![Kali Brute-Force Attack On Metasploitable2;s FTP Server Screenshot[(images/bruteforce2.png)
+*Screenshots of brute-force attacks on Metasploitable2's FTP Server with Kali as the attacker machine*
 
-Failed FTP logins
-![Splunk Logger Test Screenshot](images/KaliAuthLogs.png)########################################3
-*Screenshot on verifying if Kali auth-logs are being sent to Splunk*
+The above screenshots show brute-force attempts which discovered 9 valid username-password combinations. I then tried logging into the FTP server using a fake username and password as illustrated below:
+
+![Fake FTP Login Attempts Screenshot](images/bruteforce3.png)
+*Screenshot on failed FTP login attempts from Kali*
+
+---
 
 ### Step 6: 🔍 Check On Kali For Metasploitable2 Logs From Step 5 (Triggered Nmap Scan, Brute-force On FTP And Failed FTP logins)
 
@@ -631,11 +657,13 @@ The command above continuously monitors and displays new entries written to the 
 
 ![Checking Nmap Scan Triggered Activity Logs on Metasploitable2 from Kali Screenshot](images/kaliVerifyMetasploitLogs.png)
 ![Checking Nmap Scan Triggered Activity Logs on Metasploitable2 from Kali Screenshot](images/kaliVerifyMetasploitLogs1.png)
-*Screenshot on checking triggered activity logs on Metasploitable2 from Kali*
+*Screenshots on checking triggered activity logs on Metasploitable2 from Kali*
 
 From the screenshots above, we can see entries like connection attempts and authentication failures, which confirmed that log forwarding and the attack simulation in step 5 is working properly.
 
 Now that logs from Metasploitable2 are arriving in /var/log/metasploitable.log on Kali Linux, let's now ship them to Splunk using rsyslog to detect nmap scans, brute-force attempts, and other exploit in Splunk.
+
+---
 
 ### Step 7: 🧩 Send /var/log/metasploitable.log File To Splunk
 
@@ -669,6 +697,8 @@ I then saved, exited and restarted rsyslog to apply the changes:
 sudo systemctl restart networking
 ```
 
+---
+
 #### 🔹 7A. Verify In Splunk
 
 In this step, I verified that the logs in /var/log/metasploitable.log file in Kali were reaching Splunk by running a search for the logs in Splunk's Search & Reporting as shown below:
@@ -678,12 +708,14 @@ index=* host="192.168.56.1" "metasploitlog"
 ```
 
 ![Verifying Metasploitable2 Logs From Kali In Splunk Screenshot](images/verifyLogsInSplunk.png)
+![Verifying Metasploitable2 Logs From Kali In Splunk Screenshot](images/verifyLogsInSplunk2.png)
 ![Verifying Metasploitable2 Logs From Kali In Splunk Screenshot](images/verifyLogsInSplunk3.png)
-*Screenshot on checking Metasploitable2 logs from Kali In Splunk*
+*Sample screenshots on checking Metasploitable2 logs from Kali In Splunk*
 
 From the screenshot above, I confirmed that the Metasploitable2 logs were reaching Splunk. The forwarded logs like:
 
-- Authentication failure - may mean brute-force attempts and failed FTP logins
+- Connection from 192.168.56.1 on illegal port - represent Nmap scan attempts
 
-- Connection from 192.168.56.1 on illegal port - may represent Nmap scan attempts
+- Authentication failure - represent brute-force attempts and failed FTP logins
 
+---
