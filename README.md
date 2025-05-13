@@ -719,3 +719,77 @@ From the screenshot above, I confirmed that the Metasploitable2 logs were reachi
 - Authentication failure - represent brute-force attempts and failed FTP logins
 
 ---
+
+### Step 8: 🔔 Creating Alerts And Dashboards In Splunk
+
+In this step, alerts and dashboards were created in Splunk to detect suspicious FTP activity like brute-force, backdoor usage from vsftpd logs
+
+#### 🔹 8A. Creating an Alert for Suspicious FTP Logins
+
+The goal is to trigger an alert when multiple failed FTP login attempts are detected from the same IP.
+
+Click Search & Reporting > Search
+
+Run a detection search
+
+```
+index=* sourcetype=syslog "vsftpd: pam_unix(ftp:auth): authentication failure"
+| rex field=_raw "rhost=(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| stats count by src_ip
+| where count > 5
+```
+
+This search:
+
+- Filters logs for FTP login failures as indicated by the authentication failure tag.
+
+- Extracts the attacker's IP address from rhost=.
+
+- Counts the number of failed attempts per IP.
+
+- Shows only IPs with more than 5 attempts.
+
+The search returned the following results, suggesting brute-force attempts as shown below:
+
+![Checking Brute-force Attempts On Metasploitable2 From Splunk Screenshot](images/splunkBruteforceLogs.png)
+*Screenshot on checking brute-force attempts on Metasploitable2 from Splunk*
+
+The screenshot above shows results of IP addresses (src_ip) with more than 5 failed login attempts. For this case, the IP address displayed is just one - Kali's IP address.
+
+I then saved this as an alert:
+
+Click Save As > Alert
+
+And gave it a name: FTP Brute Force Detected (vsftpd)
+
+Set trigger condition:
+
+- Type - Scheduled Alert
+
+- Schedule - Cron Schedule 
+
+     - */5 * * * * - This will run every 5 minutes
+
+- Trigger Condition
+
+     - If number of results > 0 — This means the alert will fire if the search returns any rows (i.e., any src_ip with more than 5 failed attempts).
+
+- Throttling
+
+     - Enabled throttling ( Do not trigger again for 15 mins per IP) to reduce alert noise.
+
+Set actions:
+
+- Send an email
+
+- Set Alert Severity as: High 
+
+- I customized the email subject as: FTP Brute Force Attempt from $result.src_ip$
+
+I then saved the alert as shown below:
+
+![FTP Brute Force Alert Creation Screenshot](images/FTPBruteForceAlert.png)
+*Screenshot on a successfully FTP brute force alert created in Splunk*
+
+---
+
