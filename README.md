@@ -471,6 +471,7 @@ The following line was appended at the bottom:
 ```
 
 ![Screenshot On Enabling Remote Logging On Metasploitable2](images/KaliIPappendedInMetasp.png)
+
 *Screenshot on enabling remote logging on Metasploitable2*
 
 This forwards system logs from Metasploitable2 to Kali so as to detect Nmap scans, brute-force attempts, and other exploit activities.
@@ -541,7 +542,7 @@ done
 
 This script pipes the contents of /var/log/vsftpd.log in Metasploitable2 into a logger, and the logger sends it into rsyslog in Kali, rsyslog then forwards it over to Windows host, where Splunk is listening as previously configured in step 4.1.
 
-I then made the file executable by running:
+Executed the file by running:
 
 ```
 sudo chmod +x /usr/local/bin/forward_vsftpd.sh
@@ -559,8 +560,9 @@ I ran a failed login attempts' test exploit on the FTP service from Kali and ver
 sudo tail -f /var/log/vsftpd.log
 ```
 
-![Screenshot On Verifying Forwarded Metasploitable2 Logs To Kali](images/verifyvsftpdlogsInMetasp.png)
-*Screenshot on verifying forwarded Metasploitable2 logs to Kali*
+![Screenshot On Verifying FTP logs in Metasploitable2](images/verifyvsftpdlogsInMetasp.png)
+
+*Screenshot on verifying FTP logs in Metasploitable2 logs*
 
 ---
 
@@ -633,12 +635,12 @@ sudo systemctl restart networking
 
 ---
 
-#### 🔹 7A. Verify vsftpd logs In Splunk
+#### 8.1 Verify vsftpd logs In Splunk
 
-In this step, I verified that the logs in /var/log/metasploitable.log file in Kali were reaching Splunk by running a search for the logs in Splunk's Search & Reporting as shown below:
+In this step, I verified that the logs in /var/log/metasploitable.log file from Kali were reaching Splunk by running a search for the logs in Splunk's Search & Reporting as shown below:
 
 ```
-index=* host="192.168.56.1" "metasploitlog" "vsftpd"
+index=* host="192.168.56.1" "metasploitlog"
 ```
 
 ![Verifying Metasploitable2 Logs From Kali In Splunk Screenshot](images/verifyLogsInSplunk.png)
@@ -653,6 +655,9 @@ From the screenshot above, I confirmed that the Metasploitable2 logs were reachi
 - Authentication failure - represent brute-force attempts and failed FTP logins
 
 ---
+
+
+
 
 ### Step 8: 🔔 Creating Alerts And Dashboards In Splunk
 
