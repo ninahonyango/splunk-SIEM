@@ -781,7 +781,7 @@ To further improve the detection and response capabilities of this project, the 
 
 ---
 
-*Please follow through the subsequent projects for implementation of the response capabilities outlined in the Recommendations.*
+*Please follow through the subsequent projects for the implementation of response capabilities outlined in Recommendations.*
 
 *Click [here](https://github.com/ninahonyango/Elizabeth_P_A_Onyango) to go back to Portfolio.*
 
