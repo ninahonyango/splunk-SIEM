@@ -773,8 +773,8 @@ Real-time alerts enabled immediate containment actions such as blocking the atta
 To further improve the detection and response capabilities of this project, the following enhancements were done in the subsequent projects:
 
 - Implement account lockout policies to limit brute-force activity.
-- Introduce Multi-Factor Authentication to critical services to reduce credential theft.
-- Establish normal activity baselines to better detect analities, and reduce false positives.
+- Introduce Multi-Factor Authentication on critical services to reduce credential theft.
+- Establish normal activity baselines to better detect anomalities, and reduce false positives.
 - Add contextual enrichment to alerts (hostname, target user, geolocation) for quicker triage.
 - Automate containment actions such as auto-blocking malicious IP addresses to spped up response times.
 - Expand detection coverage to other attack types such as data exfiltration, privilege escalation and malware activity.
