@@ -1,4 +1,4 @@
-# Threat Detection and SIEM Implementation & Tuning
+# Threat Detection and Splunk SIEM Implementation & Tuning
 
 ## Project Overview
 
