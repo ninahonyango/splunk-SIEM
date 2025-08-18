@@ -52,7 +52,7 @@ The objective is to simulate a Security Operations Center (SOC) scenario where s
 
 8. Sending the /var/log/metasploitable.log File to Splunk.
 
-9. Creating Alerts And Dashboards In Splunk.
+9. Creating Alerts In Splunk.
 
 10. Verifying Email Alerts Received.
 ---
@@ -660,7 +660,7 @@ The forwarded logs such as "connection from 192.168.56.1 on illegal port" repres
 
 ---
 
-### Step 9: Creating Alerts And Dashboards In Splunk
+### Step 9: Creating Alerts In Splunk
 
 In this step, alerts and dashboards were created in Splunk to detect suspicious activities like brute-force, nmap scans and other exploit activities.
 
@@ -778,6 +778,7 @@ To further improve the detection and response capabilities of this project, the 
 - Add contextual enrichment to alerts (hostname, target user, geolocation) for quicker triage.
 - Automate containment actions such as auto-blocking malicious IP addresses to spped up response times.
 - Expand detection coverage to other attack types such as data exfiltration, privilege escalation and malware activity.
+- Develop and maintain monitoring dashboards to visualize malicious activity, top attacker IP addresses and alert trends over time. This helps quickly identify abnormal behavior and supports continuos tuning of detection rules.
 
 ---
 
