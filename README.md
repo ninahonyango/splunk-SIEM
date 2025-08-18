@@ -741,5 +741,24 @@ This query:
 
 ---
 
-### Step 10: Triggered Activities to validate this setup
+### Step 10: Verifying Email Alerts Received
 
+The following screenshots confirm email alerts received from the triggered brute force attempts and nmap port scans.
+
+![FTP Brute-force Attempts Email Alert](images/splunkEmail.png)
+*Screenshot of FTP brute-force attempts email alert.*
+
+![Port Scan Detected Email Alert](images/splunkEmail1.png)
+*Screenshot of Metasploitable port scan detection email alert.*
+
+---
+
+## Conclusion
+
+The implementation of brute-force detection and alerting within the lab environment has significantly strengthened the visibility and response capability of the network.
+
+By leveraging Splunk as a central log aggregation and monitoring tool. I was able to identify repeated authentication failures and reconnaissance activity originating from malicious IP addresses.
+
+Real-time alerts enabled immediate containment actions such as blocking the attacker IP and disabling affected services.
+
+---
