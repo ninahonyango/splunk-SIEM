@@ -743,7 +743,7 @@ This query:
 
 ### Step 10: Verifying Email Alerts Received
 
-The following screenshots confirm email alerts received from the triggered brute force attempts and nmap port scans.
+The following screenshots confirm email alerts received from the triggered brute-force attempts and nmap port scans.
 
 ![FTP Brute-force Attempts Email Alert](images/splunkEmail.png)
 *Screenshot of FTP brute-force attempts email alert.*
@@ -755,10 +755,31 @@ The following screenshots confirm email alerts received from the triggered brute
 
 ## Conclusion
 
-The implementation of brute-force detection and alerting within the lab environment has significantly strengthened the visibility and response capability of the network.
+This project successfully demonstrated how security monitoring can be implemented within a virtual lab environment. It significantly strengthened the visibility and response capabilities of the network. 
 
-By leveraging Splunk as a central log aggregation and monitoring tool. I was able to identify repeated authentication failures and reconnaissance activity originating from malicious IP addresses.
+By deploying Splunk as the central SIEM platform and tuning its search queries and alerting logic, the lab was able to detect key threats such as brute-force attacks and reconnaissance activity from the malicious IP addresses in real time.
+
+The project highlights the importance of proper log collection, parsing, and tuning of detection rules in order to generate meaningful and actionable alerts.
 
 Real-time alerts enabled immediate containment actions such as blocking the attacker IP and disabling affected services.
+
+---
+
+## Recommendations
+
+To further improve the detection and response capabilities of this project, the following enhancements were done in the subsequent projects:
+
+- Implement account lockout policies to limit brute-force activity.
+- Introduce Multi-Factor Authentication to critical services to reduce credential theft.
+- Establish normal activity baselines to better detect analities, and reduce false positives.
+- Add contextual enrichment to alerts (hostname, target user, geolocation) for quicker triage.
+- Automate containment actions such as auto-blocking malicious IP addresses to spped up response times.
+- Expand detection coverage to other attack types such as data exfiltration, privilege escalation and malware activity.
+
+---
+
+Please follow through the subsequent projects for implementation of the response capabilities outlined in the Recommendations.
+
+*Click [here](https://github.com/ninahonyango/Elizabeth P A Onyango) to go back to Portfolio.*
 
 ---
