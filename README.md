@@ -50,8 +50,11 @@ The objective is to simulate a Security Operations Center (SOC) scenario where s
 
 7. Testing the /var/log/vsftpd.log File Configuration with Trigger Activity from Kali.
 
-8. Creating Alerts And Dashboards In Splunk
+8. Sending the /var/log/metasploitable.log File to Splunk.
 
+9. Creating Alerts And Dashboards In Splunk.
+
+10. Verifying Email Alerts Received.
 ---
 
 ### Step 1: Virtual Lab Setup & Checking rsyslog Service in Kali
@@ -778,8 +781,8 @@ To further improve the detection and response capabilities of this project, the 
 
 ---
 
-Please follow through the subsequent projects for implementation of the response capabilities outlined in the Recommendations.
+*Please follow through the subsequent projects for implementation of the response capabilities outlined in the Recommendations.*
 
-*Click [here](https://github.com/ninahonyango/Elizabeth P A Onyango) to go back to Portfolio.*
+*Click [here](https://github.com/ninahonyango/Elizabeth_P_A_Onyango) to go back to Portfolio.*
 
 ---
