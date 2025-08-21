@@ -12,7 +12,7 @@ The objective is to simulate a Security Operations Center (SOC) scenario where s
 
 - **Kali Linux** (Attacker VM): For generating simulated malicious traffic and logs.
 
-- **Metasploitable 2** (Victim VM): Intentionally vulnerable target.
+- **Metasploitable** (Victim VM): Intentionally vulnerable target.
 
 - **Windows Host** (With Splunk): central log collector and analysis interface.
 
@@ -24,7 +24,7 @@ The objective is to simulate a Security Operations Center (SOC) scenario where s
 
 ## Objectives
 
-- Simulate a real-world network security environment using virtual machines (Kali Linux, Metasploitable2) and a Windows host machine.
+- Simulate a real-world network security environment using virtual machines (Kali Linux, Metasploitable) and a Windows host machine.
 
 - Capture and forward logs from attacker and target machines to Splunk for centralized analysis.
 
@@ -42,9 +42,9 @@ The objective is to simulate a Security Operations Center (SOC) scenario where s
 
 3. Verifying Network Connectivity.
 
-4. Configuring Splunk to Receive Logs from Kali and Metasploitable2 VMs.
+4. Configuring Splunk to Receive Logs from Kali and Metasploitable VMs.
 
-5. Configuring Kali Linux and Metasploitable2 VMs to Send Logs to Splunk.
+5. Configuring Kali Linux and Metasploitable VMs to Send Logs to Splunk.
 
 6. Testing syslog File Configuration with Trigger Activity from Kali.
 
@@ -64,7 +64,7 @@ The objective is to simulate a Security Operations Center (SOC) scenario where s
 |----------------|-----------------------------------|
 | Host OS         | Windows 10 - Where Splunk Is Installed To Monitor Logs from Kali and Metasploitable2  |
 | Attacker        | Kali Linux VM - To Generate Traffic (port scans, attacks etc)           |
-| Target          | Metasploitable2 VM - Intentionally Vulnerable                          |
+| Target          | Metasploitable VM - Intentionally Vulnerable                          |
 | Network Type    | Host-Only Adapter (VirtualBox Host-Only Ethernet Adapter)                            |
 | Host IP         | `192.168.56.103`                                                                     |
 | Attacker IP     | `192.168.56.1`                                                                       |
@@ -154,7 +154,7 @@ It is ideal for the project as it provides a controlled environment for testing 
 
 ### Step 2: Network Configuration & Assigning of IP Addresses
 
-After reconfiguring the adapter to host-only, I restarted both Kali and start Metasploitable2 VMs, checked for Windows host's Ethernet adapter IP address in Windows command prompt by executing:
+After reconfiguring the adapter to host-only, I restarted both Kali and start Metasploitable VMs, checked for Windows host's Ethernet adapter IP address in Windows command prompt by executing:
 
 ```
 ipconfig
@@ -226,9 +226,9 @@ If Kali does not have a route to that subnet, it would not know where to send pa
 
 ---
 
-#### 2.2 Assigning a static IP to Metasploitable2 VM
+#### 2.2 Assigning a static IP to Metasploitable VM
 
-In the Metasploitable2 terminal, network configuration file was modified to assign a static IP address 192.168.56.101:
+In the Metasploitable terminal, network configuration file was modified to assign a static IP address 192.168.56.101:
 
 ```
 sudo nano /etc/network/interfaces
@@ -250,9 +250,9 @@ The networking service was then restarted to apply the changes:
 sudo /etc/init.d/networking restart
 ```
 
-Metasploitable2 is based on an old Linux version - Ubuntu 8.04. It uses SysVinit, not systemd, so systemctl does not exist there, hence it cannot be used to restart the network interface.
+Metasploitable is based on an old Linux version - Ubuntu 8.04. It uses SysVinit, not systemd, so systemctl does not exist there, hence it cannot be used to restart the network interface.
 
-To confirm the assigned Metasploitable2 IP address:
+To confirm the assigned Metasploitable IP address:
 
 ```
 ip a
@@ -264,9 +264,9 @@ The output verified eth0 interface listed with IP address 192.168.56.101
 
 ### Step 3: Verifying Network Connectivity
 
-Now that the Windows host machine, Kali Linux and Metasploitable2 VMs are all configured to operate within the same subnet (192.168.56.0/24), connectivity was verified to ensure that they are communicating as expected. 
+Now that the Windows host machine, Kali Linux and Metasploitable VMs are all configured to operate within the same subnet (192.168.56.0/24), connectivity was verified to ensure that they are communicating as expected. 
 
-On Kali terminal, ping Metaspoitable2 and Windows IP addresses:
+On Kali terminal, ping Metaspoitable and Windows IP addresses:
 
 ```
 ping 192.168.56.101 
@@ -276,14 +276,14 @@ ping 192.168.56.103
 ![Kali Ping Screenshot](images/verifyKali.png)
 *Screenshot on verifying network connectivity from Kali*
 
-On Windows command prompt, ping Kali and Metasploitable2 IP addresses:
+On Windows command prompt, ping Kali and Metasploitable IP addresses:
 
 ```
 ping 192.168.56.1
 ping 192.168.56.101
 ```
 
-On Metasploitable2 terminal, ping Kali and Windows IP addresses:
+On Metasploitable terminal, ping Kali and Windows IP addresses:
 
 ```
 ping 192.168.56.1
@@ -296,7 +296,7 @@ This verification step is critical as it shows that the virtual environment was 
 
 ---
 
-### Step 4: Configuring Splunk to Receive Logs from Kali and Metasploitable2 VMs
+### Step 4: Configuring Splunk to Receive Logs from Kali and Metasploitable VMs
 
 After successful ping tests, Splunk was then configured to receive logs from both Kali Linux and Metasploitable VMs.
 
@@ -330,11 +330,11 @@ Then set "Source type" to syslog
 
 I left the rest as default and clicked on "Submit".
 
-In the next step, Kali Linux and Metasploitable2 VMs were configured to send logs to Splunk.
+In the next step, Kali Linux and Metasploitable VMs were configured to send logs to Splunk.
 
 ---
 
-### Step 5: Configuring Kali Linux and Metasploitable2 VMs to Send Logs to Splunk
+### Step 5: Configuring Kali Linux and Metasploitable VMs to Send Logs to Splunk
 
 #### 5.1 Configuring Kali Linux VM To Send Logs To Splunk
 
@@ -380,11 +380,11 @@ The screenshot above verified that Splunk was receiving logs from Kali VM.
 
 ---
 
-#### 5.2 Configuring Metasploitable2 VM to Send Logs to Splunk
+#### 5.2 Configuring Metasploitable VM to Send Logs to Splunk
 
-Metasploitable2 uses syslogd (the traditional syslog daemon) to handle logs, not rsyslog as in Kali. 
+Metasploitable uses syslogd (the traditional syslog daemon) to handle logs, not rsyslog as in Kali. 
 
-To configure Metasploitable2 to send logs to Splunk, I opened the syslog configuration file on Metasploitable2:
+To configure Metasploitable to send logs to Splunk, I opened the syslog configuration file on Metasploitable:
 
 ```
 sudo nano /etc/syslog.conf
@@ -394,7 +394,7 @@ At the bottom of the file, the following line was added to send logs to Windows 
 
 *.*    @192.168.56.103
 
-:514 was not used in "*.* @192.168.56.103" because syslogd (older, used by Metasploitable2) does not support custom port syntax in /etc/syslog.conf. It always sends to port 514 by default when using @.
+:514 was not used in "*.* @192.168.56.103" because syslogd (older, used by Metasploitable) does not support custom port syntax in /etc/syslog.conf. It always sends to port 514 by default when using @.
 
 After saving the configuration, syslogd was restarted to apply the changes:
 
@@ -402,18 +402,18 @@ After saving the configuration, syslogd was restarted to apply the changes:
 sudo killall -HUP syslogd
 ```
 
-Now that Metasploitable2 has been configured to send logs to Splunk, I verified that the logs are successfully being sent to Splunk by creating a test logger and searching for the log in Splunk by running a test log in Metasploitable2 terminal:
+Now that Metasploitable has been configured to send logs to Splunk, I verified that the logs are successfully being sent to Splunk by creating a test logger and searching for the log in Splunk by running a test log in Metasploitable terminal:
 
 ```
 logger "test message from Metasploitable2"
 ```
 
-I then proceeded to Splunk's Search & Reporting dashboard, and ran a search with index="test message from Metasploitable2" to see the incoming test log from Metasploitable2 as shown below:
+I then proceeded to Splunk's Search & Reporting dashboard, and ran a search with index="test message from Metasploitable2" to see the incoming test log from Metasploitable as shown below:
 
 ![Splunk Logger Test Screenshot](images/splunkTestMetasploit.png)
-*Screenshot on verifying if Metasploitable2 logs are being sent to Splunk*
+*Screenshot on verifying if Metasploitable logs are being sent to Splunk*
 
-The screenshot above verified that Splunk was receiving logs from Metasploitable2 VM with IP 192.168.56.101.
+The screenshot above verified that Splunk was receiving logs from Metasploitable VM with IP 192.168.56.101.
 
 ---
 
@@ -428,7 +428,7 @@ sudo tail -f /var/log/vsftpd.log
 
 *Screenshot on verifying forwarded vsftpd.log logs in Metasploitable.*
 
-The screenshot above verifies that vsftpd.log file in Metasploitable2 was receiving the failed login attempts logs from Kali.
+The screenshot above verifies that vsftpd.log file in Metasploitable was receiving the failed login attempts logs from Kali.
 
 More exploit activities were performed on Metasploitable from Kali to generate more logs:
 
@@ -450,7 +450,7 @@ index=* host="192.168.56.101" "ftp"
 
 ![Verifying Metasploitable FTP Logs In Splunk Screenshot](images/verifyLogsInSplunk.png)
 ![Verifying Metasploitable FTP Logs In Splunk Screenshot](images/verifyLogsInSplunk2.png)
-*Sample screenshots on checking FTP Metasploitable2 logs In Splunk*
+*Sample screenshots on checking FTP Metasploitable logs In Splunk*
 
 From the screenshots above, I confirmed that the FTP Metasploitable logs were reaching Splunk. 
 
@@ -458,7 +458,7 @@ The forwarded "authentication failure" logs represent brute-force attempts and f
 
 #### 7.1 Verifying Metasploitable's Connection Attempts Logs in Splunk
 
-To verify connection attempts logs on Metasploitable2, the following search query was run:
+To verify connection attempts logs on Metasploitable, the following search query was run:
 
 ```
 index=* host="192.168.56.101"
@@ -466,7 +466,7 @@ index=* host="192.168.56.101"
 
 ![Verifying Connection Attempts On Metasploitable2 In Splunk Screenshot](images/connectAttempts.png)
 ![Verifying Connection Attempts On Metasploitable2 In Splunk Screenshot](images/connectAttempts1.png)
-*Sample screenshots on checking connection attempts on Metasploitable2 In Splunk*
+*Sample screenshots on checking connection attempts on Metasploitable In Splunk*
 
 The forwarded logs such as "connect from 192.168.56.1" represent Nmap scan attempts from the attacker machine Kali Linux.
 
@@ -520,7 +520,7 @@ Set trigger condition to:
 
 - Trigger alert whenever search returns a result
 
-- Enable Throttle on src_ip within 10 minutes - This means the alert from the same source IP will not trigger again for 10 minutes to avoid spam for repeated attacks from the same IP source, hence reducing alert noise.
+- Enable throttle on src_ip within 10 minutes - This means the alert from the same source IP will not trigger again for 10 minutes to avoid spam for repeated attacks from the same IP source, hence reducing alert noise.
 
 Set actions to when an alert is triggered:
 
@@ -546,7 +546,7 @@ index=* sourcetype=syslog "connect from"
 | search src_ip="192.168.56.1"
 ```
 
-This query:
+This search query:
 
 - Filters logs that contain the phrase "connect from" which indicates connection attempts such as nmap scans.
 
@@ -554,6 +554,12 @@ This query:
 
 - Filters the results to show only logs where the extracted IP is 192.168.56.1 and store it in a field called src_ip.
 
+The search returned the following results, suggesting connection attempts as shown below:
+
+![Checking Connection Attempts On Metasploitable From Splunk Search Query Screenshot](images/splunkNmaplogs.png)
+*Screenshot on checking connection attempts on Metasploitable from Splunk Search Query*
+
+The screenshot above shows results of IP addresses (src_ip) with more than 5 failed login attempts. For this case, the IP address displayed is just one - Kali's IP address.
 ---
 
 ### Step 9: Verifying Email Alerts Received
